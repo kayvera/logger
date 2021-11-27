@@ -1,7 +1,6 @@
 const fs = require('fs');
 
-fs.readFile('./logs/logs_0.json', function (error, content) {
-  let data = JSON.parse(content);
+const createTally = (data) => {
   const result = Array.from(
     data.logs
       .reduce((acc, o) => {
@@ -16,6 +15,15 @@ fs.readFile('./logs/logs_0.json', function (error, content) {
       }, new Map())
       .values()
   );
-  console.log(result);
   return result;
+};
+
+fs.readFile('./logs/logs_0.json', function (error, content) {
+  let data = JSON.parse(content);
+  let tallyData = createTally(data);
+  let logMsg = {
+    data: data.id,
+    tally: [],
+  };
+  logMsg.tally.push(...tallyData);
 });
