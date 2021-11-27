@@ -1,4 +1,7 @@
 const fs = require('fs');
+const path = require('path');
+
+const dirPath = './logs';
 
 const createTally = (data) => {
   const result = Array.from(
@@ -18,12 +21,19 @@ const createTally = (data) => {
   return result;
 };
 
-fs.readFile('./logs/logs_0.json', function (error, content) {
-  let data = JSON.parse(content);
-  let tallyData = createTally(data);
-  let logMsg = {
-    data: data.id,
-    tally: [],
-  };
-  logMsg.tally.push(...tallyData);
-});
+const createLogData = () => {
+  const files = fs.readdirSync(dirPath);
+
+  files.forEach((val, i) => {
+    let data = JSON.parse(fs.readFileSync(path.join(dirPath, val), 'utf8'));
+    let tallyData = createTally(data);
+    let logMsg = {
+      id: data.id,
+      tally: [],
+    };
+    logMsg.tally.push(...tallyData);
+    console.log(logMsg);
+  });
+};
+
+createLogData();
